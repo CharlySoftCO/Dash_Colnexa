@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { Eye, EyeOff, Mail, Lock, ArrowRight } from 'lucide-react';
-import Image from 'next/image';
 import styles from './page.module.css';
 import { useRouter } from 'next/navigation';
 
@@ -54,7 +53,7 @@ export default function Home() {
 
       localStorage.setItem('jwt', data.jwt);
       router.push('/dashboard');
-    } catch (err) {
+    } catch {
       setError('Error de red o del servidor');
     } finally {
       setIsLoading(false);

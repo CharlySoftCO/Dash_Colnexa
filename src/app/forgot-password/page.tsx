@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { Mail, ArrowLeft, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
-import Image from 'next/image';
 import styles from './forgot-password.module.css';
 
 export default function ForgotPasswordPage() {
@@ -36,7 +35,7 @@ export default function ForgotPasswordPage() {
       setIsSubmitted(true);
       console.log('Email de recuperación enviado a:', email);
       
-    } catch (err) {
+    } catch {
       setError('Error al enviar el email. Intenta nuevamente.');
     } finally {
       setIsLoading(false);
