@@ -3,62 +3,67 @@
 import { useState } from 'react';
 import { Eye, EyeOff, Mail, Lock, ArrowRight } from 'lucide-react';
 import styles from './page.module.css';
-import { useRouter } from 'next/navigation';
+import { useAuth, useRedirectIfAuthenticated } from '@/lib/hooks/useAuth';
 
 export default function Home() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
 
-  const router = useRouter();
+  const { login, isLoading, error } = useAuth();
+  const { isLoading: checkingAuth } = useRedirectIfAuthenticated();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
 
     // Validación en el cliente
     if (!email || !password) {
-      setError('Por favor completa todos los campos');
+      alert('Por favor ingresa tu correo electrónico y contraseña.');
       return;
     }
+
     // Validación de formato de email
     const emailRegex = /^[^@]+@[^@]+\.[^@]+$/;
     if (!emailRegex.test(email)) {
-      setError('Por favor ingresa un correo electrónico válido');
+      alert('Por favor ingresa un correo electrónico válido.');
       return;
     }
 
-    setIsLoading(true);
-
     try {
-      const res = await fetch('https://sstrapiss.colnexa.com.co/auth/local', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          identifier: email,
-          password,
-        }),
+      await login({
+        identifier: email,
+        password,
       });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        // Mensaje de error del backend (usuario o contraseña incorrectos)
-        setError(data.error?.message || 'Correo electrónico o contraseña incorrectos');
-        setIsLoading(false);
-        return;
+    } catch (error: any) {
+      // Mostrar mensaje de error más amigable
+      if (error?.message?.toLowerCase().includes('invalid')) {
+        alert('Usuario o contraseña incorrectos.');
+      } else if (error?.message?.toLowerCase().includes('blocked')) {
+        alert('Tu cuenta está bloqueada. Contacta al administrador.');
+      } else {
+        alert('Ocurrió un error al iniciar sesión. Intenta nuevamente.');
       }
-
-      localStorage.setItem('jwt', data.jwt);
-      router.push('/dashboard');
-    } catch {
-      setError('Error de red o del servidor');
-    } finally {
-      setIsLoading(false);
+      console.error('Error en login:', error);
     }
   };
+
+  // Mostrar loader mientras se verifica la autenticación
+  if (checkingAuth) {
+    return (
+      <div style={{ 
+        minHeight: '100vh', 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center',
+        background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)'
+      }}>
+        <div style={{ textAlign: 'center' }}>
+          <p style={{ color: '#718096', fontSize: 16 }}>Verificando sesión...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.container}>
@@ -83,31 +88,6 @@ export default function Home() {
           {error && (
             <div className={styles.error} style={{ position: 'relative' }}>
               {error}
-              <button
-                type="button"
-                onClick={() => setError('')}
-                style={{
-                  position: 'absolute',
-                  top: '50%',
-                  right: 10,
-                  transform: 'translateY(-50%)',
-                  background: 'none',
-                  border: 'none',
-                  fontSize: 18,
-                  color: '#c53030',
-                  cursor: 'pointer',
-                  lineHeight: 1,
-                  padding: 0,
-                  height: 24,
-                  width: 24,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-                aria-label="Cerrar alerta"
-              >
-                ×
-              </button>
             </div>
           )}
 
@@ -211,5 +191,5 @@ export default function Home() {
           className={styles.backgroundVideo}
         />
       </div>
-    );
-  }
+  );
+}

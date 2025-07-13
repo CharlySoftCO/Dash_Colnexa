@@ -40,3 +40,40 @@ a {
     color-scheme: dark;
   }
 }
+
+/* Mejoras responsive para dashboard empresarial */
+@media (max-width: 600px) {
+  /* Cards y secciones */
+  section, .dashboard-card, .dashboard-section {
+    padding: 12px !important;
+    border-radius: 10px !important;
+    gap: 10px !important;
+  }
+  /* Tablas */
+  table {
+    font-size: 13px !important;
+    min-width: 320px !important;
+  }
+  th, td {
+    padding: 6px !important;
+  }
+  /* Headers y títulos */
+  h2, h3 {
+    font-size: 18px !important;
+  }
+  /* Inputs y selects */
+  input, select {
+    font-size: 14px !important;
+    padding: 8px !important;
+  }
+  /* Botones */
+  button {
+    font-size: 14px !important;
+    padding: 8px 12px !important;
+  }
+  /* Filtros y filas */
+  .dashboard-filters, .dashboard-row {
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+}
