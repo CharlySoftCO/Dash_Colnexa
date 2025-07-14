@@ -19,7 +19,7 @@ export default function ForgotPasswordPage() {
     try {
       // Simulación de envío de email
       await new Promise(resolve => setTimeout(resolve, 2000));
-      
+
       // Validación básica
       if (!email) {
         setError('Por favor ingresa tu correo electrónico');
@@ -33,8 +33,6 @@ export default function ForgotPasswordPage() {
 
       // Simular envío exitoso
       setIsSubmitted(true);
-      console.log('Email de recuperación enviado a:', email);
-      
     } catch {
       setError('Error al enviar el email. Intenta nuevamente.');
     } finally {
@@ -56,12 +54,12 @@ export default function ForgotPasswordPage() {
 
           <div className={styles.successContent}>
             <p>
-              Si no encuentras el email, revisa tu carpeta de spam o 
+              Si no encuentras el email, revisa tu carpeta de spam o
               solicita un nuevo enlace.
             </p>
-            
+
             <div className={styles.actions}>
-              <button 
+              <button
                 onClick={() => {
                   setIsSubmitted(false);
                   setEmail('');
@@ -70,7 +68,7 @@ export default function ForgotPasswordPage() {
               >
                 Enviar Nuevamente
               </button>
-              
+
               <Link href="/" className={styles.secondaryButton}>
                 Volver al Login
               </Link>
@@ -88,10 +86,10 @@ export default function ForgotPasswordPage() {
         </div>
 
         {/* Background Video */}
-        <video 
-          src="/login.mp4" 
-          autoPlay 
-          loop 
+        <video
+          src="/login.mp4"
+          autoPlay
+          loop
           muted
           playsInline
           className={styles.backgroundVideo}
@@ -109,7 +107,7 @@ export default function ForgotPasswordPage() {
             <ArrowLeft size={20} />
             Volver
           </Link>
-          
+
           <div className={styles.logoModern}>
             <div className={styles.logoModernImg}>
               <div className={styles.logoContent}>
@@ -117,7 +115,7 @@ export default function ForgotPasswordPage() {
               </div>
             </div>
           </div>
-          
+
           <div className={styles.welcomeModern}>
             <h2>Recuperar Contraseña</h2>
             <p>Ingresa tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña.</p>
@@ -184,14 +182,14 @@ export default function ForgotPasswordPage() {
         </div>
 
         {/* Background Video */}
-        <video 
-          src="/login.mp4" 
-          autoPlay 
-          loop 
+        <video
+          src="/login.mp4"
+          autoPlay
+          loop
           muted
           playsInline
           className={styles.backgroundVideo}
         />
       </div>
     );
-} 
+}

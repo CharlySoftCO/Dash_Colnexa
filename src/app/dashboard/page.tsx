@@ -3,9 +3,9 @@
 import { useState } from 'react';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import HomePage from '@/components/dashboard/HomePage';
-import UsersPage from '@/components/dashboard/UsersPage';
 import ReportsPage from '@/components/dashboard/ReportsPage';
 import SettingsPage from '@/components/dashboard/SettingsPage';
+import ServicesPage from '@/components/dashboard/ServicesPage';
 import { useProtectedRoute } from '@/lib/hooks/useAuth';
 
 export default function Dashboard() {
@@ -14,7 +14,6 @@ export default function Dashboard() {
 
   const handleItemClick = (itemId: string) => {
     setActiveItem(itemId);
-    console.log('Navegando a:', itemId);
   };
 
   // Renderizar el contenido según la página activa
@@ -22,8 +21,8 @@ export default function Dashboard() {
     switch (activeItem) {
       case 'home':
         return <HomePage />;
-      case 'users':
-        return <UsersPage />;
+      case 'services':
+        return <ServicesPage />;
       case 'reports':
         return <ReportsPage />;
       case 'settings':
@@ -35,12 +34,12 @@ export default function Dashboard() {
 
   if (isLoading) {
     return (
-      <div style={{ 
-        minHeight: '100vh', 
-        display: 'flex', 
-        alignItems: 'center', 
+      <div style={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
         justifyContent: 'center',
-        background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)'
+        background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
       }}>
         <div style={{ textAlign: 'center' }}>
           <p style={{ color: '#718096', fontSize: 16 }}>Verificando acceso...</p>
@@ -58,9 +57,9 @@ export default function Dashboard() {
     <DashboardLayout
       activeItem={activeItem}
       onItemClick={handleItemClick}
-      onLogout={() => {}} // Se manejará en el layout
+      onLogout={() => {}}
     >
       {renderContent()}
     </DashboardLayout>
   );
-} 
+}

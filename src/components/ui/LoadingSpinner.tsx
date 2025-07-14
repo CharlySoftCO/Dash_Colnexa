@@ -7,16 +7,16 @@ interface LoadingSpinnerProps {
   fullScreen?: boolean;
 }
 
-export default function LoadingSpinner({ 
-  size = 'medium', 
+export default function LoadingSpinner({
+  size = 'medium',
   color = '#667eea',
   text,
-  fullScreen = false 
+  fullScreen = false,
 }: LoadingSpinnerProps) {
   const sizeMap = {
     small: 16,
     medium: 24,
-    large: 32
+    large: 32,
   };
 
   const spinnerSize = sizeMap[size];
@@ -27,18 +27,18 @@ export default function LoadingSpinner({
         style={{
           width: spinnerSize,
           height: spinnerSize,
-          border: `2px solid #e2e8f0`,
+          border: '2px solid #e2e8f0',
           borderTop: `2px solid ${color}`,
           borderRadius: '50%',
           animation: 'spin 1s linear infinite',
         }}
       />
       {text && (
-        <p style={{ 
-          color: '#718096', 
-          fontSize: 14, 
+        <p style={{
+          color: '#718096',
+          fontSize: 14,
           margin: 0,
-          textAlign: 'center'
+          textAlign: 'center',
         }}>
           {text}
         </p>
@@ -59,7 +59,7 @@ export default function LoadingSpinner({
         alignItems: 'center',
         justifyContent: 'center',
         zIndex: 9999,
-        backdropFilter: 'blur(4px)'
+        backdropFilter: 'blur(4px)',
       }}>
         {spinner}
       </div>
@@ -71,7 +71,7 @@ export default function LoadingSpinner({
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: 20
+      padding: 20,
     }}>
       {spinner}
     </div>
@@ -91,4 +91,4 @@ if (typeof document !== 'undefined') {
   const styleSheet = document.createElement('style');
   styleSheet.textContent = styles;
   document.head.appendChild(styleSheet);
-} 
+}

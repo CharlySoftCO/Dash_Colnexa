@@ -17,7 +17,7 @@ export function useAuth(): UseAuthReturn {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+
   const router = useRouter();
 
   // Verificar autenticación al montar el componente
@@ -55,8 +55,7 @@ export function useAuth(): UseAuthReturn {
         const userData = authService.getUser();
         setIsAuthenticated(true);
         setUser(userData);
-      } catch (err) {
-        console.error('Error verificando autenticación:', err);
+      } catch {
         setError('Error verificando la sesión');
         authService.logout();
         setIsAuthenticated(false);
@@ -80,11 +79,11 @@ export function useAuth(): UseAuthReturn {
       setIsAuthenticated(true);
       // Redirigir al dashboard
       router.push('/dashboard');
-    } catch (err: any) {
-      console.error('Error en login:', err);
-      if (err?.message?.toLowerCase().includes('invalid')) {
+    } catch (err: unknown) {
+      const error = err as { message?: string };
+      if (error?.message?.toLowerCase().includes('invalid')) {
         setError('Usuario o contraseña incorrectos.');
-      } else if (err?.message?.toLowerCase().includes('blocked')) {
+      } else if (error?.message?.toLowerCase().includes('blocked')) {
         setError('Tu cuenta está bloqueada. Contacta al administrador.');
       } else {
         setError('Ocurrió un error al iniciar sesión. Intenta nuevamente.');
@@ -101,7 +100,7 @@ export function useAuth(): UseAuthReturn {
     setUser(null);
     setIsAuthenticated(false);
     setError(null);
-    
+
     // Redirigir al login
     router.push('/');
   }, [router]);
@@ -124,8 +123,7 @@ export function useAuth(): UseAuthReturn {
       const userData = authService.getUser();
       setUser(userData);
       setIsAuthenticated(true);
-    } catch (err) {
-      console.error('Error refrescando sesión:', err);
+    } catch {
       setError('Tu sesión ha expirado. Por favor inicia sesión nuevamente.');
       authService.logout();
       setUser(null);
@@ -173,4 +171,4 @@ export function useRedirectIfAuthenticated(redirectTo: string = '/dashboard') {
   }, [isAuthenticated, isLoading, router, redirectTo]);
 
   return { isAuthenticated, isLoading };
-} 
+}

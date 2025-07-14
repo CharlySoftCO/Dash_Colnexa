@@ -1,15 +1,16 @@
 'use client';
 
-import Image from 'next/image';
 import { AuthUser } from '@/lib/auth';
+import Image from 'next/image';
 
 interface HeaderProps {
   onLogout: () => void;
   user: AuthUser | null;
   onMenuClick?: () => void;
+  sidebarOpen: boolean;
 }
 
-export default function Header({ onLogout, user, onMenuClick, sidebarOpen }: HeaderProps & { sidebarOpen: boolean }) {
+export default function Header({ onLogout, user, onMenuClick, sidebarOpen }: HeaderProps) {
   // Detectar si es móvil
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 
@@ -59,24 +60,30 @@ export default function Header({ onLogout, user, onMenuClick, sidebarOpen }: Hea
             )}
           </button>
         )}
-        <img src="/logo.svg" alt="Logo" width={isMobile ? 28 : 40} height={isMobile ? 28 : 40} style={{ borderRadius: 8, background: '#f8fafc' }} />
+        <Image
+          src="/logo.svg"
+          alt="Logo"
+          width={isMobile ? 28 : 40}
+          height={isMobile ? 28 : 40}
+          style={{ borderRadius: 8, background: '#f8fafc' }}
+        />
         <span style={{ fontWeight: 700, fontSize: isMobile ? 16 : 20, color: '#232946', letterSpacing: 1, display: isMobile ? 'block' : 'inline' }}>
           {isMobile ? 'Colnexa' : 'Colnexa Panel'}
         </span>
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? 6 : 16 }}>
         {/* Solo mostrar nombre de usuario en desktop */}
-        {!isMobile && <span style={{ color: '#232946', fontWeight: 500 }}>{user?.username || 'Usuario'}</span>}
+        {!isMobile && <span style={{ color: '#232946', fontWeight: 500 }}>{user?.username ?? 'Usuario'}</span>}
         <button
           onClick={onLogout}
-          style={{ 
-            background: '#232946', 
-            color: '#fff', 
-            border: 'none', 
-            borderRadius: 6, 
-            padding: isMobile ? '6px 10px' : '8px 18px', 
-            fontWeight: 600, 
-            cursor: 'pointer', 
+          style={{
+            background: '#232946',
+            color: '#fff',
+            border: 'none',
+            borderRadius: 6,
+            padding: isMobile ? '6px 10px' : '8px 18px',
+            fontWeight: 600,
+            cursor: 'pointer',
             fontSize: isMobile ? 14 : 15,
             width: isMobile ? 'auto' : undefined,
             height: isMobile ? 32 : undefined,
@@ -84,7 +91,7 @@ export default function Header({ onLogout, user, onMenuClick, sidebarOpen }: Hea
             alignItems: 'center',
             justifyContent: 'center',
             gap: 6,
-            transition: 'all 0.2s ease'
+            transition: 'all 0.2s ease',
           }}
           aria-label="Cerrar sesión"
         >
@@ -97,4 +104,4 @@ export default function Header({ onLogout, user, onMenuClick, sidebarOpen }: Hea
       </div>
     </header>
   );
-} 
+}

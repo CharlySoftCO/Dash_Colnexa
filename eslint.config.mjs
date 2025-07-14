@@ -38,6 +38,12 @@ const eslintConfig = [
   },
   {
     files: ["**/*.ts", "**/*.tsx"],
+    languageOptions: {
+      parserOptions: {
+        project: "./tsconfig.json",
+        tsconfigRootDir: __dirname,
+      },
+    },
     rules: {
       // Reglas específicas para TypeScript
       "@typescript-eslint/explicit-function-return-type": "off",

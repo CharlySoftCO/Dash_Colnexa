@@ -7,13 +7,13 @@ export default function SettingsPage() {
       <p style={{ color: '#718096', fontSize: 16 }}>
         Configura las preferencias del sistema, ajusta parámetros de seguridad y personaliza la experiencia.
       </p>
-      
-      <div style={{ 
-        marginTop: 24, 
-        padding: 32, 
-        background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)', 
+
+      <div style={{
+        marginTop: 24,
+        padding: 32,
+        background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
         borderRadius: 12,
-        textAlign: 'center'
+        textAlign: 'center',
       }}>
         <h3 style={{ color: '#232946', fontWeight: 600, marginBottom: 12 }}>Funcionalidad en desarrollo</h3>
         <p style={{ color: '#718096' }}>
@@ -22,4 +22,4 @@ export default function SettingsPage() {
       </div>
     </div>
   );
-} 
+}

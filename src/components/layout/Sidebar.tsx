@@ -1,23 +1,19 @@
 'use client';
 
-import { useState } from 'react';
-import { 
-  Home, 
-  Users, 
-  BarChart3, 
-  Settings, 
-  ChevronLeft, 
-  ChevronRight,
+import {
+  Home,
+  Users,
+  BarChart3,
+  Settings,
   LogOut,
-  User
+  User,
 } from 'lucide-react';
 import { AuthUser } from '@/lib/auth';
 
-// Tipos
 interface SidebarItem {
   id: string;
   label: string;
-  icon: any;
+  icon: React.ComponentType<{ size?: number; color?: string; style?: React.CSSProperties }>;
   active: boolean;
 }
 
@@ -27,19 +23,17 @@ interface SidebarProps {
   onLogout: () => void;
   user: AuthUser | null;
   sidebarOpen: boolean;
-  setSidebarOpen: (open: boolean) => void;
   toggleSidebar: () => void;
 }
 
-// Datos del sidebar
 const sidebarItems: SidebarItem[] = [
   { id: 'home', label: 'Inicio', icon: Home, active: true },
-  { id: 'users', label: 'Usuarios', icon: Users, active: false },
+  { id: 'services', label: 'Servicios', icon: Users, active: false },
   { id: 'reports', label: 'Reportes', icon: BarChart3, active: false },
   { id: 'settings', label: 'Configuración', icon: Settings, active: false },
 ];
 
-export default function Sidebar({ activeItem, onItemClick, onLogout, user, sidebarOpen, setSidebarOpen, toggleSidebar }: SidebarProps) {
+export default function Sidebar({ activeItem, onItemClick, onLogout, user, sidebarOpen, toggleSidebar }: SidebarProps) {
   // Detectar si es móvil
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 
@@ -69,38 +63,13 @@ export default function Sidebar({ activeItem, onItemClick, onLogout, user, sideb
           boxShadow: '4px 0 20px rgba(0, 0, 0, 0.1)',
         }}
       >
-        {/* Botón 'X' para cerrar solo en móviles y sidebarOpen */}
-        {isMobile && sidebarOpen && (
-          <button
-            onClick={toggleSidebar}
-            style={{
-              position: 'absolute',
-              top: 16,
-              right: 16,
-              background: 'rgba(255,255,255,0.12)',
-              border: 'none',
-              borderRadius: 8,
-              color: '#fff',
-              width: 32,
-              height: 32,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              zIndex: 50,
-            }}
-            aria-label="Cerrar menú"
-          >
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2"><line x1="5" y1="5" x2="15" y2="15" /><line x1="15" y1="5" x2="5" y2="15" /></svg>
-          </button>
-        )}
         {/* Header del sidebar */}
-        <div style={{ 
-          padding: '24px 20px', 
+        <div style={{
+          padding: '24px 20px',
           borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: sidebarOpen ? 'space-between' : 'center'
+          justifyContent: sidebarOpen ? 'space-between' : 'center',
         }}>
           {/* Logo y texto */}
           <div style={{ display: 'flex', alignItems: 'center', gap: sidebarOpen ? 12 : 0, justifyContent: 'center', width: '100%' }}>
@@ -115,7 +84,7 @@ export default function Sidebar({ activeItem, onItemClick, onLogout, user, sideb
               fontSize: 22,
               fontWeight: 700,
               color: '#fff',
-              margin: sidebarOpen ? 0 : '0 auto'
+              margin: sidebarOpen ? 0 : '0 auto',
             }}>
               C
             </div>
@@ -125,6 +94,29 @@ export default function Sidebar({ activeItem, onItemClick, onLogout, user, sideb
               </span>
             )}
           </div>
+          {/* Botón de cerrar solo en móvil y cuando el sidebar está abierto */}
+          {isMobile && sidebarOpen && (
+            <button
+              onClick={toggleSidebar}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: '#fff',
+                fontSize: 28,
+                cursor: 'pointer',
+                position: 'absolute',
+                top: 18,
+                right: 18,
+                zIndex: 50,
+                padding: 0,
+                lineHeight: 1,
+              }}
+              aria-label="Cerrar menú"
+              title="Cerrar menú"
+            >
+              ×
+            </button>
+          )}
         </div>
         {/* Navegación */}
         <nav style={{ flex: 1, padding: sidebarOpen ? '20px 12px' : '20px 0' }}>
@@ -139,8 +131,8 @@ export default function Sidebar({ activeItem, onItemClick, onLogout, user, sideb
                     style={{
                       width: '100%',
                       padding: sidebarOpen ? '12px 16px' : '12px 0',
-                      background: isActive 
-                        ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' 
+                      background: isActive
+                        ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
                         : 'transparent',
                       border: 'none',
                       borderRadius: 12,
@@ -158,18 +150,18 @@ export default function Sidebar({ activeItem, onItemClick, onLogout, user, sideb
                     title={item.label}
                     aria-label={item.label}
                   >
-                    <IconComponent 
-                      size={20} 
-                      style={{ 
+                    <IconComponent
+                      size={20}
+                      style={{
                         minWidth: 20,
-                        opacity: isActive ? 1 : 0.8
-                      }} 
+                        opacity: isActive ? 1 : 0.8,
+                      }}
                     />
                     {sidebarOpen && (
-                      <span style={{ 
+                      <span style={{
                         whiteSpace: 'nowrap',
                         overflow: 'hidden',
-                        textOverflow: 'ellipsis'
+                        textOverflow: 'ellipsis',
                       }}>
                         {item.label}
                       </span>
@@ -185,7 +177,7 @@ export default function Sidebar({ activeItem, onItemClick, onLogout, user, sideb
                         height: 20,
                         background: '#fff',
                         borderRadius: '0 2px 2px 0',
-                        boxShadow: '0 0 8px rgba(255, 255, 255, 0.5)'
+                        boxShadow: '0 0 8px rgba(255, 255, 255, 0.5)',
                       }} />
                     )}
                   </button>
@@ -194,14 +186,13 @@ export default function Sidebar({ activeItem, onItemClick, onLogout, user, sideb
             })}
           </ul>
         </nav>
-
         {/* Footer del sidebar */}
-        <div style={{ 
-          padding: '20px 12px', 
+        <div style={{
+          padding: '20px 12px',
           borderTop: '1px solid rgba(255, 255, 255, 0.1)',
           display: 'flex',
           flexDirection: 'column',
-          gap: 8
+          gap: 8,
         }}>
           {/* Perfil de usuario */}
           <div style={{
@@ -213,8 +204,7 @@ export default function Sidebar({ activeItem, onItemClick, onLogout, user, sideb
             gap: 12,
             cursor: 'pointer',
             transition: 'all 0.2s ease',
-          }}
-          >
+          }}>
             <div style={{
               width: 32,
               height: 32,
@@ -228,24 +218,24 @@ export default function Sidebar({ activeItem, onItemClick, onLogout, user, sideb
             </div>
             {sidebarOpen && (
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ 
-                  fontSize: 14, 
-                  fontWeight: 600, 
+                <div style={{
+                  fontSize: 14,
+                  fontWeight: 600,
                   color: '#fff',
                   whiteSpace: 'nowrap',
                   overflow: 'hidden',
-                  textOverflow: 'ellipsis'
+                  textOverflow: 'ellipsis',
                 }}>
-                  {user?.username || 'Usuario'}
+                  {user?.username ?? 'Usuario'}
                 </div>
-                <div style={{ 
-                  fontSize: 12, 
+                <div style={{
+                  fontSize: 12,
                   color: '#94a3b8',
                   whiteSpace: 'nowrap',
                   overflow: 'hidden',
-                  textOverflow: 'ellipsis'
+                  textOverflow: 'ellipsis',
                 }}>
-                  {user?.email || 'Administrador'}
+                  {user?.email ?? 'Administrador'}
                 </div>
               </div>
             )}
@@ -279,4 +269,4 @@ export default function Sidebar({ activeItem, onItemClick, onLogout, user, sideb
       </aside>
     </>
   );
-} 
+}

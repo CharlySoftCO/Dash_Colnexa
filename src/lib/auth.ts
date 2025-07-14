@@ -20,9 +20,9 @@ export interface LoginCredentials {
 }
 
 class AuthService {
-  private readonly STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'https://sstrapiss.colnexa.com.co';
-  private readonly JWT_KEY = process.env.NEXT_PUBLIC_JWT_STORAGE_KEY || 'jwt';
-  private readonly SESSION_TIMEOUT = parseInt(process.env.NEXT_PUBLIC_SESSION_TIMEOUT || '3600000');
+  private readonly STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL ?? 'https://sstrapiss.colnexa.com.co';
+  private readonly JWT_KEY = process.env.NEXT_PUBLIC_JWT_STORAGE_KEY ?? 'jwt';
+  private readonly SESSION_TIMEOUT = parseInt(process.env.NEXT_PUBLIC_SESSION_TIMEOUT ?? '3600000');
 
   /**
    * Inicia sesión con las credenciales proporcionadas
@@ -39,16 +39,15 @@ class AuthService {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error?.message || 'Error de autenticación');
+        throw new Error(errorData.error?.message ?? 'Error de autenticación');
       }
 
       const data: AuthResponse = await response.json();
       this.setToken(data.jwt);
       this.setUser(data.user);
       return data;
-    } catch (error) {
-      console.error('Error en login:', error);
-      throw error;
+    } catch {
+      throw new Error('Error de autenticación');
     }
   }
 
@@ -66,8 +65,7 @@ class AuthService {
       });
 
       return response.ok;
-    } catch (error) {
-      console.error('Error verificando JWT:', error);
+    } catch {
       // En caso de error de red, asumir válido temporalmente
       return true;
     }
@@ -77,7 +75,9 @@ class AuthService {
    * Obtiene el token almacenado
    */
   getToken(): string | null {
-    if (typeof window === 'undefined') return null;
+    if (typeof window === 'undefined') {
+      return null;
+    }
     return localStorage.getItem(this.JWT_KEY);
   }
 
@@ -85,7 +85,9 @@ class AuthService {
    * Almacena el token
    */
   setToken(token: string): void {
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined') {
+      return;
+    }
     localStorage.setItem(this.JWT_KEY, token);
   }
 
@@ -93,7 +95,9 @@ class AuthService {
    * Elimina el token
    */
   removeToken(): void {
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined') {
+      return;
+    }
     localStorage.removeItem(this.JWT_KEY);
   }
 
@@ -101,7 +105,9 @@ class AuthService {
    * Obtiene la información del usuario
    */
   getUser(): AuthUser | null {
-    if (typeof window === 'undefined') return null;
+    if (typeof window === 'undefined') {
+      return null;
+    }
     const userStr = localStorage.getItem('user');
     return userStr ? JSON.parse(userStr) : null;
   }
@@ -110,7 +116,9 @@ class AuthService {
    * Almacena la información del usuario
    */
   setUser(user: AuthUser): void {
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined') {
+      return;
+    }
     localStorage.setItem('user', JSON.stringify(user));
   }
 
@@ -118,7 +126,9 @@ class AuthService {
    * Elimina la información del usuario
    */
   removeUser(): void {
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined') {
+      return;
+    }
     localStorage.removeItem('user');
   }
 
@@ -153,7 +163,9 @@ class AuthService {
    */
   isSessionExpired(): boolean {
     const token = this.getToken();
-    if (!token) return true;
+    if (!token) {
+      return true;
+    }
 
     try {
       // Decodificar el JWT para obtener la fecha de expiración
@@ -162,8 +174,7 @@ class AuthService {
       const currentTime = Date.now();
 
       return currentTime > expirationTime;
-    } catch (error) {
-      console.error('Error decodificando JWT:', error);
+    } catch {
       return true;
     }
   }
@@ -173,7 +184,9 @@ class AuthService {
    */
   async refreshSession(): Promise<boolean> {
     const token = this.getToken();
-    if (!token) return false;
+    if (!token) {
+      return false;
+    }
 
     if (this.isSessionExpired()) {
       this.logout();
@@ -200,4 +213,4 @@ export const isAuthenticated = () => authService.isAuthenticated();
 export const getToken = () => authService.getToken();
 export const getUser = () => authService.getUser();
 export const verifyToken = (jwt: string) => authService.verifyToken(jwt);
-export const refreshSession = () => authService.refreshSession(); 
+export const refreshSession = () => authService.refreshSession();

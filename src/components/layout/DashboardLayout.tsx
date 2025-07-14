@@ -1,10 +1,9 @@
 'use client';
 
-import { ReactNode } from 'react';
+import { ReactNode, useState, useEffect } from 'react';
 import Sidebar from './Sidebar';
 import Header from './Header';
 import { useAuth } from '@/lib/hooks/useAuth';
-import { useState, useEffect } from 'react';
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -13,11 +12,11 @@ interface DashboardLayoutProps {
   onLogout?: () => void;
 }
 
-export default function DashboardLayout({ 
-  children, 
-  activeItem, 
-  onItemClick, 
-  onLogout 
+export default function DashboardLayout({
+  children,
+  activeItem,
+  onItemClick,
+  onLogout,
 }: DashboardLayoutProps) {
   const { logout, user } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(true); // Abierto por defecto en escritorio
@@ -40,7 +39,9 @@ export default function DashboardLayout({
 
   const handleLogout = () => {
     logout();
-    if (onLogout) onLogout();
+    if (onLogout) {
+      onLogout();
+    }
   };
 
   const toggleSidebar = () => setSidebarOpen((open) => !open);
@@ -51,25 +52,26 @@ export default function DashboardLayout({
   return (
     <div>
       {/* Sidebar: drawer en móviles, fijo en escritorio */}
-      <Sidebar 
+      <Sidebar
         activeItem={activeItem}
         onItemClick={onItemClick}
         onLogout={handleLogout}
         user={user}
         sidebarOpen={sidebarOpen}
-        setSidebarOpen={setSidebarOpen}
         toggleSidebar={toggleSidebar}
       />
 
       {/* Main content */}
-      <div style={{
-        marginLeft: mainMarginLeft,
-        transition: 'margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-        display: 'flex',
-        flexDirection: 'column',
-        minHeight: '100vh',
-        background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)'
-      }}>
+      <div
+        style={{
+          marginLeft: mainMarginLeft,
+          transition: 'margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+          display: 'flex',
+          flexDirection: 'column',
+          minHeight: '100vh',
+          background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
+        }}
+      >
         {/* Header con botón de menú en móviles y toggle en escritorio */}
         <Header onLogout={handleLogout} user={user} onMenuClick={toggleSidebar} sidebarOpen={sidebarOpen} />
         {/* Main content area */}
@@ -79,4 +81,4 @@ export default function DashboardLayout({
       </div>
     </div>
   );
-} 
+}

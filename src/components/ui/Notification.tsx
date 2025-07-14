@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { X, CheckCircle, AlertCircle, Info, AlertTriangle } from 'lucide-react';
 
 export type NotificationType = 'success' | 'error' | 'warning' | 'info';
@@ -17,35 +17,35 @@ const notificationStyles = {
     background: '#f0fdf4',
     border: '#bbf7d0',
     color: '#166534',
-    icon: CheckCircle
+    icon: CheckCircle,
   },
   error: {
     background: '#fef2f2',
     border: '#fecaca',
     color: '#dc2626',
-    icon: AlertCircle
+    icon: AlertCircle,
   },
   warning: {
     background: '#fffbeb',
     border: '#fed7aa',
     color: '#d97706',
-    icon: AlertTriangle
+    icon: AlertTriangle,
   },
   info: {
     background: '#eff6ff',
     border: '#bfdbfe',
     color: '#2563eb',
-    icon: Info
-  }
+    icon: Info,
+  },
 };
 
-export default function Notification({ 
-  type, 
-  title, 
-  message, 
-  duration = 5000, 
+export default function Notification({
+  type,
+  title,
+  message,
+  duration = 5000,
   onClose,
-  show = true 
+  show = true,
 }: NotificationProps) {
   const [isVisible, setIsVisible] = useState(show);
   const [isExiting, setIsExiting] = useState(false);
@@ -57,6 +57,14 @@ export default function Notification({
     setIsVisible(show);
   }, [show]);
 
+  const handleClose = useCallback(() => {
+    setIsExiting(true);
+    setTimeout(() => {
+      setIsVisible(false);
+      onClose?.();
+    }, 300);
+  }, [onClose]);
+
   useEffect(() => {
     if (duration > 0 && isVisible) {
       const timer = setTimeout(() => {
@@ -65,17 +73,11 @@ export default function Notification({
 
       return () => clearTimeout(timer);
     }
-  }, [duration, isVisible]);
+  }, [duration, isVisible, handleClose]);
 
-  const handleClose = () => {
-    setIsExiting(true);
-    setTimeout(() => {
-      setIsVisible(false);
-      onClose?.();
-    }, 300);
-  };
-
-  if (!isVisible) return null;
+  if (!isVisible) {
+    return null;
+  }
 
   return (
     <div
@@ -95,30 +97,30 @@ export default function Notification({
         transition: 'transform 0.3s ease-in-out',
         display: 'flex',
         alignItems: 'flex-start',
-        gap: 12
+        gap: 12,
       }}
     >
-      <IconComponent 
-        size={20} 
+      <IconComponent
+        size={20}
         color={style.color}
         style={{ flexShrink: 0, marginTop: 2 }}
       />
-      
+
       <div style={{ flex: 1, minWidth: 0 }}>
-        <h4 style={{ 
-          margin: '0 0 4px 0', 
-          fontSize: 14, 
-          fontWeight: 600, 
-          color: style.color 
+        <h4 style={{
+          margin: '0 0 4px 0',
+          fontSize: 14,
+          fontWeight: 600,
+          color: style.color,
         }}>
           {title}
         </h4>
         {message && (
-          <p style={{ 
-            margin: 0, 
-            fontSize: 13, 
+          <p style={{
+            margin: 0,
+            fontSize: 13,
             color: '#64748b',
-            lineHeight: 1.4
+            lineHeight: 1.4,
           }}>
             {message}
           </p>
@@ -137,7 +139,7 @@ export default function Notification({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          flexShrink: 0
+          flexShrink: 0,
         }}
         aria-label="Cerrar notificación"
       >
@@ -154,9 +156,9 @@ export function useNotification() {
   const addNotification = (notification: Omit<NotificationProps, 'show'>) => {
     const id = Math.random().toString(36).substr(2, 9);
     const newNotification = { ...notification, id, show: true };
-    
+
     setNotifications(prev => [...prev, newNotification]);
-    
+
     return id;
   };
 
@@ -164,16 +166,16 @@ export function useNotification() {
     setNotifications(prev => prev.filter(n => n.id !== id));
   };
 
-  const showSuccess = (title: string, message?: string) => 
+  const showSuccess = (title: string, message?: string) =>
     addNotification({ type: 'success', title, message });
 
-  const showError = (title: string, message?: string) => 
+  const showError = (title: string, message?: string) =>
     addNotification({ type: 'error', title, message });
 
-  const showWarning = (title: string, message?: string) => 
+  const showWarning = (title: string, message?: string) =>
     addNotification({ type: 'warning', title, message });
 
-  const showInfo = (title: string, message?: string) => 
+  const showInfo = (title: string, message?: string) =>
     addNotification({ type: 'info', title, message });
 
   return {
@@ -183,7 +185,7 @@ export function useNotification() {
     showSuccess,
     showError,
     showWarning,
-    showInfo
+    showInfo,
   };
 }
 
@@ -202,4 +204,4 @@ export function NotificationContainer() {
       ))}
     </>
   );
-} 
+}
