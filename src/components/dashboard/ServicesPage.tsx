@@ -38,7 +38,7 @@ export default function ServicesPage() {
   useEffect(() => {
     const filtered = services.filter(service =>
       service.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      service.description.toLowerCase().includes(searchTerm.toLowerCase())
+      service.description.toLowerCase().includes(searchTerm.toLowerCase()),
     );
     setFilteredServices(filtered);
   }, [services, searchTerm]);
@@ -373,7 +373,7 @@ export default function ServicesPage() {
                           name="description"
                           className="form-control"
                           placeholder="Describe el servicio en detalle..."
-                          value={form.description || ""}
+                          value={form.description || ''}
                           onChange={handleChange}
                           disabled={submitting}
                           rows={3}
